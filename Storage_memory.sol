@@ -27,3 +27,4 @@ contract StorageAndMemory {
         return storedData;
     }
 }
+
