@@ -1,0 +1,10 @@
+.walletCard {
+	margin:5rem;
+	
+	border-radius: 5px;
+	background-color:transparent;
+	color: white;
+	border-bottom: white;
+	border: solid 2px;
+	
+}
