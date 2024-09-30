@@ -31,8 +31,9 @@ Copy code
 npm run dev
 This command starts the project on port 3000.
 
-Make Project Public
+### Make Project Public
 Ensure the project is set to be public in Gitpod to access it via port 3000.
 
-Example Screenshot
-![image](https://github.com/user-attachments/assets/bb906d6e-84e1-42ca-9e11-5b8ca0ee8970)
+### Screenshot
+![meta](https://github.com/user-attachments/assets/00ad94ab-d7d6-4122-950c-fc23458f89f4)
+
