@@ -37,3 +37,9 @@ Ensure the project is set to be public in Gitpod to access it via port 3000.
 ### Screenshot
 ![meta](https://github.com/user-attachments/assets/00ad94ab-d7d6-4122-950c-fc23458f89f4)
 
+### Author
+
+Aayush Tewari
+
+Chandigarh University
+
