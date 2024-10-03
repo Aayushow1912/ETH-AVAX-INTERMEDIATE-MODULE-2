@@ -33,12 +33,15 @@ This command starts the project on port 3000.
 
 ### Interacting with Project
 Front View of my Stock Market Dapp
+
 ![meta3](https://github.com/user-attachments/assets/cb39d3e8-7853-489b-ad22-ef947f250a71)
 
 Interacting with UI and confirming the transaction with Metamask
+
 ![meta5](https://github.com/user-attachments/assets/2a6f0439-8305-4910-ab47-f165d7def37c)
 
 Final update of the transaction and also confirmation message
+
 ![meta2](https://github.com/user-attachments/assets/25a6479d-9ee2-4e84-b534-d736f7b1afbe)
 
 ### Author
