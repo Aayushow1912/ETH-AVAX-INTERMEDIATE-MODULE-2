@@ -1,6 +1,4 @@
-# ETH-AVAX-PROOF-Intermediate-Module-2
-
-## Stock Market Dapp
+# Stock Market Dapp
 
 ## Setup Instructions
 
@@ -33,10 +31,12 @@ Copy code
 npm run dev
 This command starts the project on port 3000.
 
-### Make Project Public
-Ensure the project is set to be public in Gitpod to access it via port 3000.
-
-### Screenshot
+### Interacting with Project
+Front View of my Stock Market Dapp
+![meta3](https://github.com/user-attachments/assets/cb39d3e8-7853-489b-ad22-ef947f250a71)
+Interacting with UI and confirming the transaction with Metamask
+![meta4](https://github.com/user-attachments/assets/417755ac-acb8-46f2-9791-446175f055ba)
+Final update of the transaction and also confirmation message
 ![meta2](https://github.com/user-attachments/assets/25a6479d-9ee2-4e84-b534-d736f7b1afbe)
 
 ### Author
