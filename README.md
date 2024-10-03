@@ -35,11 +35,13 @@ This command starts the project on port 3000.
 Ensure the project is set to be public in Gitpod to access it via port 3000.
 
 ### Screenshot
-![meta](https://github.com/user-attachments/assets/00ad94ab-d7d6-4122-950c-fc23458f89f4)
+![meta2](https://github.com/user-attachments/assets/25a6479d-9ee2-4e84-b534-d736f7b1afbe)
 
 ### Author
 
 Aayush Tewari
+
+Mail-id: taayush1912@gmail.com
 
 Chandigarh University
 
