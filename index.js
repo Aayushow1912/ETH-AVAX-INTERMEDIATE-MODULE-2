@@ -18,12 +18,14 @@ export default function HomePage() {
   const [ethWallet, setEthWallet] = useState(undefined);
   const [account, setAccount] = useState(undefined);
   const [assessment, setAssessment] = useState(undefined);
-  const [value, setValueState] = useState(0);
-  const [message, setMessageState] = useState("Hello, world!");
-  const [loadingValue, setLoadingValue] = useState(false);
+  const [stockCount, setStockCount] = useState(0);
+  const [message, setMessageState] = useState("Welcome to this Stock Market Exchange");
+  const [loadingStockCount, setLoadingStockCount] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState(false);
 
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; 
+  const [selectedStock, setSelectedStock] = useState("NIFTY50");
+
+  const contractAddress = "0xdd2fd4581271e230360230f9337d5c0430bf44c0";
   const assessmentABI = assessment_abi.abi;
 
   const getWallet = async () => {
@@ -70,18 +72,18 @@ export default function HomePage() {
     setAssessment(assessmentContract);
   };
 
-  const fetchValue = async () => {
+  const fetchStockCount = async () => {
     if (assessment) {
       try {
-        setLoadingValue(true);
-        console.log("Fetching value...");
-        const value = await assessment.getValue();
-        setValueState(value.toNumber());
-        console.log("Fetched value:", value.toNumber());
+        setLoadingStockCount(true);
+        console.log("Fetching stock count...");
+        const count = await assessment.getStockCount(); // Ensure this function is correctly implemented in the smart contract
+        setStockCount(count.toNumber());
+        console.log("Fetched stock count:", count.toNumber());
       } catch (error) {
-        console.error("Error fetching value:", error);
+        console.error("Error fetching stock count:", error);
       } finally {
-        setLoadingValue(false);
+        setLoadingStockCount(false);
       }
     }
   };
@@ -102,35 +104,71 @@ export default function HomePage() {
     }
   };
 
-  const updateValue = async () => {
+  const buyStocks = async () => {
     if (assessment) {
-      const newValue = prompt("Enter new value:");
-      if (newValue) {
+      const stockAmount = prompt(`Enter the number of ${selectedStock} stocks to buy:`);
+      if (stockAmount) {
         try {
-          const tx = await assessment.setValue(Number(newValue));
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = provider.getSigner();
+          await provider.send("eth_requestAccounts", []);
+
+          const assessmentWithSigner = assessment.connect(signer);
+
+          console.log(`Sending transaction to buy ${stockAmount} ${selectedStock} stocks...`);
+          const tx = await assessmentWithSigner.buyStocks(Number(stockAmount), { gasLimit: 100000 });
+          
+          setStockCount(stockAmount);
+          setMessageState(`You have successfully bought ${stockAmount} stocks of ${selectedStock}. Your total stocks now: ${stockAmount}.`);  // Use the updated count directly
           await tx.wait();
-          console.log("Value updated, fetching new value...");
-          await fetchValue();
+
         } catch (error) {
-          console.error("Error setting value:", error);
+          console.error("Error buying stocks:", error);
         }
       }
+    } else {
+      console.error("Assessment contract is not defined.");
+      alert("The assessment contract is not available. Please try again later.");
     }
   };
 
-  const updateMessage = async () => {
+  const sellStocks = async () => {
     if (assessment) {
-      const newMessage = prompt("Enter new message:");
-      if (newMessage) {
+      const stockAmount = Number(prompt(`Enter the number of ${selectedStock} stocks to sell:`));
+      if (stockAmount) {
         try {
-          const tx = await assessment.setMessage(newMessage);
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = provider.getSigner();
+          await provider.send("eth_requestAccounts", []);
+
+          console.log('stock_amount:',stockAmount,stockCount);
+
+          const assessmentWithSigner = assessment.connect(signer);
+          console.log(`Sending transaction to sell ${stockAmount} ${selectedStock} stocks...`);
+          const tx = await assessmentWithSigner.sellStocks(Number(stockAmount), { gasLimit: 100000 });
+          const remaining = stockAmount > stockCount? 0 : (stockCount - stockAmount);
+          setStockCount(remaining)
+          setMessageState(`You have successfully sold ${stockAmount} stocks of ${selectedStock}. Your total stocks now: ${remaining}.`);  // Use the updated count directly
+
           await tx.wait();
-          console.log("Message updated, fetching new message...");
-          await fetchMessage();
+
+          console.log("Stocks sold, fetching new stock count...");
+
+          // Fetch updated stock count after the transaction
+          const updatedStockCount = await assessment.getStockCount();
+          const newStockCount = updatedStockCount.toNumber();
+          
+          // Update the state
+          setStockCount(newStockCount);
+
+          setMessageState(`You have successfully sold ${stockAmount} stocks of ${selectedStock}. Your total stocks now: ${remaining}.`);  // Use the updated count directly
         } catch (error) {
-          console.error("Error setting message:", error);
+          console.error("Error selling stocks:", error);
         }
       }
+    } else {
+      console.error("Assessment contract is not defined.");
+      alert("The assessment contract is not available. Please try again later.");
     }
   };
 
@@ -140,16 +178,57 @@ export default function HomePage() {
     }
 
     if (!account) {
-      return <button className={styles.btn} onClick={connectAccount}>Please connect your MetaMask wallet</button>;
+      return <button className={styles.btn} onClick={connectAccount}>Connect your MetaMask wallet</button>;
     }
 
     return (
       <div className={styles.card}>
-        <p><strong>Your Account:</strong> {account}</p>
-        <p><strong>Stored Value:</strong> {loadingValue ? "Loading..." : value !== undefined ? value : "Not available"}</p>
-        <button className={styles.btn} onClick={updateValue}>Update Value</button>
-        <p><strong>Stored Message:</strong> {loadingMessage ? "Loading..." : message !== undefined ? message : "Not available"}</p>
-        <button className={styles.btn} onClick={updateMessage}>Update Message</button>
+        <p><strong>Transaction Account:</strong> {account}</p>
+        <p><strong>Total Stock count:</strong> {loadingStockCount ? "Loading..." : stockCount !== undefined ? stockCount : "Not available"}</p>
+        
+        <div>
+          <p><strong>Select which Stock you want to buy/sell:</strong></p>
+          <div style={{ marginBottom: '10px' }}>
+            <label>
+              <input 
+                type="radio" 
+                name="stock" 
+                value="Microsoft" 
+                checked={selectedStock === "Microsoft"}
+                onChange={() => setSelectedStock("Microsoft")}
+              />
+              Microsoft
+            </label>
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <label>
+              <input 
+                type="radio" 
+                name="stock" 
+                value="Tesla" 
+                checked={selectedStock === "Tesla"}
+                onChange={() => setSelectedStock("Tesla")}
+              />
+              Tesla
+            </label>
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <label>
+              <input 
+                type="radio" 
+                name="stock" 
+                value="Google" 
+                checked={selectedStock === "Google"}
+                onChange={() => setSelectedStock("Google")}
+              />
+              Google
+            </label>
+          </div>
+        </div>
+
+        <button className={styles.btn} onClick={buyStocks}>Buy Stock(s)</button>
+        <button className={styles.btn} onClick={sellStocks}>Sell Stock(s)</button>
+        <p><strong>Confirmation Message:</strong> {loadingMessage ? "Loading..." : message !== undefined ? message : "Not available"}</p>
       </div>
     );
   };
@@ -161,16 +240,15 @@ export default function HomePage() {
   useEffect(() => {
     if (account && assessment) {
       console.log("Fetching initial values...");
-      fetchValue();
+      fetchStockCount();
       fetchMessage();
     }
   }, [account, assessment]);
 
   return (
     <main className={styles.container}>
-      <header><h1>Welcome to the Metcrafters App!</h1></header>
+      <header><h1>Welcome to the Stock Market DApp</h1></header>
       {initUser()}
     </main>
   );
 }
-
