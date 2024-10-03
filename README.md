@@ -1,5 +1,7 @@
 # ETH-AVAX-PROOF-Intermediate-Module-2
 
+## Stock Market Dapp
+
 ## Setup Instructions
 
 1. **Open in Gitpod**: Click on [Open in Gitpod](https://metacrafterc-scmstarter-ybypmhi93f4.ws-us115.gitpod.io/) to start the project in Gitpod.
